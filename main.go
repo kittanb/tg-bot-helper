@@ -20,9 +20,9 @@ type Reminder struct {
 }
 
 var (
-	reminders  []Reminder
-	scheduler  = gocron.NewScheduler(time.Local)
-	nextID     = 1
+	reminders []Reminder
+	scheduler = gocron.NewScheduler(time.Local)
+	nextID    = 1
 )
 
 func main() {
@@ -41,7 +41,7 @@ func main() {
 	bot.Handle("/notify", func(c tele.Context) error {
 		args := c.Args()
 		if len(args) < 2 {
-			return c.Send("👇 Укажи время и сообщение. Пример: /notify 14:30 покормить кота")
+			return c.Send("👇 Укажи время и сообщение. Пример: /notify 21:00 сосал таблетку?")
 		}
 
 		timeStr := args[0]
