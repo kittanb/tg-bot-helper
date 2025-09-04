@@ -7,6 +7,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -22,12 +23,13 @@ jobs:
         with:
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tg-bot-helper:${{ github.ref_name }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/tg-bot-helper:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
+    environment: prod
     steps:
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.2.0
@@ -36,8 +38,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tg-bot-helper:${{ github.ref_name }}
-            docker stop your-app || true
-            docker rm your-app || true
-            docker run -d --restart=always --name your-app \
-              ${{ secrets.DOCKERHUB_USERNAME }}/tg-bot-helper:${{ github.ref_name }}
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}
+            docker stop ${{ github.event.repository.name }} || true
+            docker rm ${{ github.event.repository.name }} || true
+            docker run -d --restart=always --name ${{ github.event.repository.name }} \
+              ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}
