@@ -43,4 +43,5 @@ jobs:
             docker rm ${{ github.event.repository.name }} || true
             docker run -d --restart=always --name ${{ github.event.repository.name }} \
               -e BOT_TOKEN=${{ secrets.BOT_TOKEN }} \
+              -e TZ=${{ vars.TZ }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}
