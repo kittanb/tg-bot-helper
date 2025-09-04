@@ -8,3 +8,4 @@ Telegram bot for creating notifications
 * /list - show list notifications
 * /delete id - delete notification
 * /clear - delete all notifications
+* /help - usage
